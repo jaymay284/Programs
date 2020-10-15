@@ -1,4 +1,4 @@
-package edu.nmsu.cs.webserver;
+//package edu.nmsu.cs.webserver;
 
 /**
  * Web worker: an object of this class executes in its own new thread to receive and respond to a
@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.File;//ADDED 9/16/2020
+import java.io.FileInputStream;
 import java.net.Socket;
 import java.text.DateFormat;
 import java.util.Date;
@@ -60,16 +61,46 @@ public class WebWorker implements Runnable
 			String file;
 			InputStream is = socket.getInputStream();
 			OutputStream os = socket.getOutputStream();
-			file = readHTTPRequest(is);
+			file = "www\\" + readHTTPRequest(is);
+         
+         String cT = file.substring(file.indexOf('.') + 1);
+         //cT holds the file suffix (png, gif, jpeg, html)
+         System.err.println("-----------------CT = " + cT + ".---------------");
+         
+         //use a switch on cT to set cT to the right kind of content Type
+         switch(cT){
+            case "html": 
+               cT = "text/html";
+               break;
+            case "gif":
+               cT = "image/gif";
+               break;
+            case "jpeg":
+               cT = "image/jpeg";
+               break;
+            case "png":
+               cT = "image/png";
+               break;
+            default: 
+               cT = "text/html";
+               break;
+         }//end switch
 			
+         //testing statement
+         System.err.println("Request is for a " + cT + " content type.");
+         
          //latch file to the actual file it references
          
          File myFile = new File(file);
+         
          String path = myFile.getAbsolutePath();
          System.out.println(myFile.getAbsolutePath());
 			
-			writeHTTPHeader(os, "text/html", myFile);
-			writeContent(os, file, path);
+			//writeHTTPHeader(os, "text/html", myFile);
+			//THIS LINE WAS WORKING AND IS COMMENTED OUT FOR REFERENCE
+         
+         writeHTTPHeader(os, cT, myFile);
+         writeContent(os, file, path, cT);
 			os.flush();
 			socket.close();
 		}
@@ -150,17 +181,11 @@ public class WebWorker implements Runnable
 	 * @param os
 	 *          is the OutputStream object to write to
 	 **/
-	private void writeContent(OutputStream os, String file, String path) throws Exception
+	private void writeContent(OutputStream os, String file, String path, String ct) throws Exception
 	{
-      /**
-      CASES:
-         File is length 0: main page
-         File == reference to actual file:
-         File == reference to nonexistent file
+      System.err.println("----Looking for file: " + file + "-------------");
+      System.err.println("--------Content Type: " + ct + "-------------");
       
-      **/
-		os.write("<html><head></head><body>\n".getBytes());
-
       if(file.length() == 0){
     	 //the request had nothing, this puts us on the front page
        os.write("<h3>My web server works!</h3>\n".getBytes());
@@ -173,7 +198,8 @@ public class WebWorker implements Runnable
          //System.err.println(file + " is the name of the file we recieved");
          //System.err.println(myFile.getAbsolutePath());
          
-         if(myFile.exists()){
+         if(myFile.exists() && ct.equals("text/html")){
+            //System.err.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
             Scanner scan = new Scanner(myFile);
             while(scan.hasNextLine()){
                //while there is still info in this line
@@ -181,16 +207,35 @@ public class WebWorker implements Runnable
                String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
                line = line.replaceAll("<cs371date>",date);
                line = line.replaceAll("<cs371server>", "Ben Longwell's Webserver!");
-               os.write(("<br>" + line).getBytes());
+               //os.write(("<br>" + line).getBytes());
+               os.write(line.getBytes());
             }//end while
-         }
+         }//end if (text documents)
+         else if(myFile.exists() && ct.equals("image/gif") || ct.equals("image/jpeg") || ct.equals("image/png")){
+            System.err.println("********************" + ct + "**********************");
+            System.err.println("********************" + file + "**********************");
+            System.err.println("********************" + path + "**********************");
+            
+            //we are on a picture file
+            //import the picture to bytes, spit them out
+            InputStream input = new FileInputStream(file);
+
+            int data = input.read();
+            while(data != -1) {
+               //do something with data...
+               os.write(data);
+
+               data = input.read();
+            }//end while
+            input.close();
+         }//end else if
          else{
+            //file cannot exist in the scope we have so far
             os.write("<h3>404 Page Not Found</h3>\n".getBytes());
+            
          }//end else
-         //else
-            //poop out a 404
+         
       }//end if
-		os.write("</body></html>\n".getBytes());
 	}
 
 } // end class

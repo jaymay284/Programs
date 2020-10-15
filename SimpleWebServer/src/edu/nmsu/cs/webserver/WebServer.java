@@ -1,4 +1,4 @@
-package edu.nmsu.cs.webserver;
+//package edu.nmsu.cs.webserver;
 
 /**
  * A simple web server: it creates a new WebWorker for each new client connection, so all the
@@ -84,7 +84,7 @@ public class WebServer
 	 **/
 	public static void main(String args[])
 	{
-		int port = 8090;
+		int port = 8080;
 		if (args.length > 1)
 		{
 			System.err.println("Usage: java Webserver <portNumber>");
