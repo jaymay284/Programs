@@ -1,26 +1,3 @@
-//package edu.nmsu.cs.webserver;
-
-/**
- * Web worker: an object of this class executes in its own new thread to receive and respond to a
- * single HTTP request. After the constructor the object executes on its "run" method, and leaves
- * when it is done.
- *
- * One WebWorker object is only responsible for one client connection. This code uses Java threads
- * to parallelize the handling of clients: each WebWorker runs in its own thread. This means that
- * you can essentially just think about what is happening on one client at a time, ignoring the fact
- * that the entirety of the webserver execution might be handling other clients, too.
- *
- * This WebWorker class (i.e., an object of this class) is where all the client interaction is done.
- * The "run()" method is the beginning -- think of it as the "main()" for a client interaction. It
- * does three things in a row, invoking three methods in this class: it reads the incoming HTTP
- * request; it writes out an HTTP header to begin its response, and then it writes out some HTML
- * content for the response content. HTTP requests and responses are just lines of text (in a very
- * particular format).
- * 
- * @author Jon Cook, Ph.D.
- *
- **/
-
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;

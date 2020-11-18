@@ -38,11 +38,11 @@ public class RacingScore1
 	public int overallScore()
 	{
 		int s;
-<span class="pc bpc" id="L41" title="1 of 2 branches missed.">		if (score1 &lt; score2)</span>
+<span class="fc bfc" id="L41" title="All 2 branches covered.">		if (score1 &lt; score2)</span>
 <span class="fc" id="L42">			s = score2;</span>
 		else
-<span class="nc" id="L44">			s = score1;</span>
-<span class="pc bpc" id="L45" title="1 of 2 branches missed.">		if (s &gt; score3)</span>
+<span class="fc" id="L44">			s = score1;</span>
+<span class="fc bfc" id="L45" title="All 2 branches covered.">		if (s &gt; score3)</span>
 <span class="fc" id="L46">			s = score3;</span>
 <span class="fc" id="L47">		s = (score1 + score2 + score3) - s;</span>
 <span class="fc" id="L48">		return s;</span>
@@ -51,10 +51,10 @@ public class RacingScore1
 	public static void main(String args[])
 	{
 		int s1, s2, s3;
-<span class="pc bpc" id="L54" title="1 of 2 branches missed.">		if (args.length != 3)</span>
+<span class="fc bfc" id="L54" title="All 2 branches covered.">		if (args.length != 3)</span>
 		{
-<span class="nc" id="L56">			System.err.println(&quot;Error: must supply three arguments!&quot;);</span>
-<span class="nc" id="L57">			return;</span>
+<span class="fc" id="L56">			System.err.println(&quot;Error: must supply three arguments!&quot;);</span>
+<span class="fc" id="L57">			return;</span>
 		}
 		try
 		{
@@ -62,10 +62,10 @@ public class RacingScore1
 <span class="fc" id="L62">			s2 = Integer.parseInt(args[1]);</span>
 <span class="fc" id="L63">			s3 = Integer.parseInt(args[2]);</span>
 		}
-<span class="nc" id="L65">		catch (Exception e)</span>
+<span class="fc" id="L65">		catch (Exception e)</span>
 		{
-<span class="nc" id="L67">			System.err.println(&quot;Error: arguments must be integers!&quot;);</span>
-<span class="nc" id="L68">			return;</span>
+<span class="fc" id="L67">			System.err.println(&quot;Error: arguments must be integers!&quot;);</span>
+<span class="fc" id="L68">			return;</span>
 <span class="fc" id="L69">		}</span>
 <span class="fc" id="L70">		RacingScore1 score = new RacingScore1();</span>
 <span class="fc" id="L71">		score.recordScores(s1, s2, s3);</span>
